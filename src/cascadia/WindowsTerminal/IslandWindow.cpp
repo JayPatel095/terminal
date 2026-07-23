@@ -1844,7 +1844,7 @@ void IslandWindow::UseDarkTheme(const bool v)
     std::ignore = DwmSetWindowAttribute(GetHandle(), DWMWA_USE_IMMERSIVE_DARK_MODE, &attribute, sizeof(attribute));
 }
 
-void IslandWindow::UseMica(const winrt::Microsoft::Terminal::Settings::Model::MicaStyle newValue, const double /*titlebarOpacity*/)
+void IslandWindow::UseMica(const bool newValue, const double /*titlebarOpacity*/)
 {
     // This block of code enables Mica for our window. By all accounts, this
     // version of the code will only work on Windows 11, SV2. There's a slightly
@@ -1853,19 +1853,7 @@ void IslandWindow::UseMica(const winrt::Microsoft::Terminal::Settings::Model::Mi
     // This API was only publicly supported as of Windows 11 SV2, 22621. Before
     // that version, this API will just return an error and do nothing silently.
 
-    int attribute = DWMSBT_NONE;
-    switch (newValue)
-    {
-    case winrt::Microsoft::Terminal::Settings::Model::MicaStyle::Mica:
-        attribute = DWMSBT_MAINWINDOW;      // "Mica"
-        break;
-    case winrt::Microsoft::Terminal::Settings::Model::MicaStyle::MicaAlt:
-        attribute = DWMSBT_TABBEDWINDOW;    // "Mica Alt"
-        break;
-    default:                                // None
-        attribute = DWMSBT_NONE;
-        break;
-    }
+    const int attribute = newValue ? DWMSBT_MAINWINDOW : DWMSBT_NONE;
     std::ignore = DwmSetWindowAttribute(GetHandle(), DWMWA_SYSTEMBACKDROP_TYPE, &attribute, sizeof(attribute));
 }
 
